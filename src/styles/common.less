@@ -38,3 +38,11 @@ form .ant-btn {
     margin: 4px 8px;
   }
 }
+
+.ant-card-body {
+  &::before, &::after {
+    display: table;
+    content: "";
+    clear: both;
+  } 
+}

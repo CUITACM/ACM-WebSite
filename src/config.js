@@ -13,6 +13,18 @@ export const NavbarMenu = [
   {
     to: '/site/news',
     text: '新闻',
+    children: [
+      { to: '/site/news/index', text: '新闻', icon: 'news' },
+    ]
+  },
+  {
+    to: '/site/honors',
+    text: '荣誉墙',
+    children: []
+  },
+  {
+    to: '/site/about',
+    text: '关于我们',
     children: []
   },
 ];

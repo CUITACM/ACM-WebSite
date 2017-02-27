@@ -14,8 +14,12 @@ class Header extends React.PureComponent {
     location: PropTypes.object,
     menus: PropTypes.array,
     dispatch: PropTypes.func,
-    loading: PropTypes.bool,
     currentUser: PropTypes.object
+  }
+
+  static getAvatar(user) {
+    if (user == null || user.avatar == null) return '';
+    return CDN_ROOT + user.avatar.thumb;
   }
 
   constructor(props) {
@@ -38,11 +42,6 @@ class Header extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     const { menus, location } = nextProps;
     this.computeActiveRoute(menus, location);
-  }
-
-  getAvatar(user) {
-    if (user == null || user.avatar == null) return '';
-    return CDN_ROOT + user.avatar.thumb;
   }
 
   computeActiveRoute(menus, location) {
@@ -97,7 +96,7 @@ class Header extends React.PureComponent {
               <li>
                 <Dropdown overlay={this.renderDropdownMenu()} trigger={['click']}>
                   <a className="ant-dropdown-link" href="#app-root">
-                    <img alt="avatar" src={this.getAvatar(currentUser)} />
+                    <img alt="avatar" src={Header.getAvatar(currentUser)} />
                     {currentUser.display_name} <Icon type="down" />
                   </a>
                 </Dropdown>
@@ -110,7 +109,6 @@ class Header extends React.PureComponent {
 }
 
 const mapStateToProps = state => ({
-  loading: state.loading.global || false,
   currentUser: state.user.currentUser,
 });
 

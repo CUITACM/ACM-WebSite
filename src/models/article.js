@@ -13,11 +13,15 @@ export const ArticleStatus = {
   PINNED: 3
 };
 
-const extractParams = query => {
-  const { page = 1, search = '', sortField = 'id', sortOrder = 'ascend' } = query;
-  const filters = JSON.parse(query.filters || '{}');
+const extractParams = (query) => {
+  const { page = 1, search = '', sortField = 'status', sortOrder = 'descend' } = query;
+  const filters = {
+    ...JSON.parse(query.filters || '{}'),
+    status: [ArticleStatus.PUBLISH, ArticleStatus.PINNED]
+  };
   return { page: parseInt(page, 10), search, sortField, sortOrder, filters };
 };
+
 
 export default {
   namespace: 'article',
@@ -30,15 +34,16 @@ export default {
     totalPages: 0,
     search: '',
     sortOrder: 'descend',
-    sortField: 'id',
+    sortField: 'status',
     filters: {}
   },
   subscriptions: {
     listSubscriber({ dispatch, history }) {
       return history.listen(({ pathname, query }) => {
-        if (pathname === '/admin/articles') {
-          dispatch({ type: 'saveParams', payload: query });
-          dispatch({ type: 'fetchList', payload: query });
+        if (pathname === '/site/news/index') {
+          const type = 'News';
+          dispatch({ type: 'saveParams', payload: { query, type } });
+          dispatch({ type: 'fetchList', payload: { query, type } });
         }
       });
     },
@@ -53,14 +58,17 @@ export default {
     },
   },
   effects: {
-    *fetchList({ payload }, { put, call, select }) {
-      const params = extractParams(payload);
+    *fetchList({ payload: { query, type } }, { put, call, select }) {
+      const params = extractParams(query);
       const per = yield select(state => state.article.per);
       const response = yield call(fetchArticles, params.page, per, {
         search: params.search,
         sort_field: params.sortField,
         sort_order: params.sortOrder,
-        filters: params.filters,
+        filters: {
+          ...params.filters,
+          article_type: type
+        },
       });
       yield put({ type: 'saveList', payload: response });
     },

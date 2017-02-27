@@ -3,6 +3,10 @@ import { Carousel, Row, Col } from 'antd';
 import './style.less';
 
 export default class Home extends React.PureComponent {
+  static propTypes = {
+    children: PropTypes.element
+  }
+
   render() {
     return (
       <Row>
@@ -33,6 +37,3 @@ export default class Home extends React.PureComponent {
   }
 }
 
-Home.propTypes = {
-  children: PropTypes.element
-};

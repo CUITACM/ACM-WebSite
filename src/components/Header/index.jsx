@@ -29,8 +29,13 @@ class Header extends React.PureComponent {
     };
     this.renderMenu = this.renderMenu.bind(this);
     this.renderDropdownMenu = this.renderDropdownMenu.bind(this);
-    this.linkTo = (item) => {
-      this.props.dispatch(routerRedux.push(item.key));
+    this.linkTo = ({ key, item }) => {
+      console.log(key, item);
+      if (item.props.direct) {
+        window.location.href = key;
+      } else {
+        this.props.dispatch(routerRedux.push(key));
+      }
     };
   }
 
@@ -45,7 +50,7 @@ class Header extends React.PureComponent {
   }
 
   computeActiveRoute(menus, location) {
-    for (let i = 0; i < menus.length; ++i) {
+    for (let i = 0; i < menus.length; i += 1) {
       if (location.pathname.indexOf(menus[i].to) === 0) {
         this.setState({ selectedKeys: [menus[i].to] });
         return;
@@ -61,7 +66,7 @@ class Header extends React.PureComponent {
         selectedKeys={this.state.selectedKeys} onClick={this.linkTo}
       >
         {this.props.menus.map(data => (
-          <Menu.Item key={data.to} >{data.text}</Menu.Item>
+          <Menu.Item key={data.to} direct={data.direct}>{data.text}</Menu.Item>
         ))}
       </Menu>
     );

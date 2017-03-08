@@ -37,7 +37,7 @@ export default class LayoutSider extends React.PureComponent {
   }
 
   computeRouteIndex(menus, location) {
-    for (let i = 0; i < menus.length; ++i) {
+    for (let i = 0; i < menus.length; i += 1) {
       if (location.pathname.indexOf(menus[i].to) === 0) {
         this.setState({ routeIndex: i });
         return i;
